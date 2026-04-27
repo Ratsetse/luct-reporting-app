@@ -1,78 +1,47 @@
-import React, { useState, useContext } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  Button,
-  StyleSheet,
-  Alert
-} from "react-native";
-
+import React, { useState } from "react";
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert } from "react-native";
 import { db } from "../../services/firebaseConfig";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { AuthContext } from "../../context/AuthContext";
+import { collection, addDoc } from "firebase/firestore";
 
-export default function CreateReportScreen() {
-  const { user } = useContext(AuthContext);
+export default function CreateReportScreen({ route, navigation }) {
+  const { courseId, courseName } = route.params;
 
   const [form, setForm] = useState({
     facultyName: "",
     className: "",
-    week: "",
-    date: "",
-    courseName: "",
+    weekOfReporting: "",
+    lectureDate: "",
+    courseName: courseName || "",
     courseCode: "",
     lecturerName: "",
     studentsPresent: "",
     totalStudents: "",
     venue: "",
-    lectureTime: "",
-    topic: "",
+    scheduledTime: "",
+    topicTaught: "",
     learningOutcomes: "",
-    recommendations: ""
+    recommendations: "",
   });
 
   const handleChange = (key, value) => {
     setForm({ ...form, [key]: value });
   };
 
-  const handleSubmit = async () => {
+  const submitReport = async () => {
+    if (!form.topicTaught || !form.courseName) {
+      Alert.alert("Error", "Please fill required fields");
+      return;
+    }
+
     try {
-      // Validation
-      if (!form.facultyName || !form.className || !form.courseName) {
-        Alert.alert("Error", "Please fill required fields");
-        return;
-      }
-
       await addDoc(collection(db, "reports"), {
+        courseId,
         ...form,
-        studentsPresent: Number(form.studentsPresent),
-        totalStudents: Number(form.totalStudents),
-        createdBy: user.uid,
-        createdAt: serverTimestamp()
+        createdAt: new Date(),
       });
 
-      Alert.alert("Success", "Report submitted!");
-
-      // Reset form
-      setForm({
-        facultyName: "",
-        className: "",
-        week: "",
-        date: "",
-        courseName: "",
-        courseCode: "",
-        lecturerName: "",
-        studentsPresent: "",
-        totalStudents: "",
-        venue: "",
-        lectureTime: "",
-        topic: "",
-        learningOutcomes: "",
-        recommendations: ""
-      });
-
+      Alert.alert("Success", "Report submitted successfully");
+      navigation.goBack();
     } catch (error) {
       Alert.alert("Error", error.message);
     }
@@ -80,43 +49,32 @@ export default function CreateReportScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Lecturer Report Form</Text>
+      <Text style={styles.title}>Create Lecture Report</Text>
+      <Text>Course: {courseName}</Text>
 
       {Object.keys(form).map((key) => (
-        <View key={key} style={styles.inputContainer}>
-          <Text style={styles.label}>{key}</Text>
-          <TextInput
-            style={styles.input}
-            value={form[key]}
-            onChangeText={(value) => handleChange(key, value)}
-          />
-        </View>
+        <TextInput
+          key={key}
+          placeholder={key}
+          value={form[key]}
+          onChangeText={(text) => handleChange(key, text)}
+          style={styles.input}
+          multiline={key === "learningOutcomes" || key === "recommendations"}
+        />
       ))}
 
-      <Button title="Submit Report" onPress={handleSubmit} />
+      <Button title="Submit Report" onPress={submitReport} />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 15
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 15
-  },
-  inputContainer: {
-    marginBottom: 10
-  },
-  label: {
-    fontWeight: "bold"
-  },
+  container: { flex: 1, padding: 20 },
+  title: { fontSize: 22, fontWeight: "bold", marginBottom: 10 },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 8,
-    borderRadius: 5
-  }
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+  },
 });

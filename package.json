@@ -9,11 +9,14 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-picker/picker": "^2.11.4",
     "@react-navigation/core": "^7.17.2",
     "@react-navigation/native": "^7.2.2",
     "@react-navigation/native-stack": "^7.14.10",
     "axios": "^1.14.0",
     "expo": "~54.0.33",
+    "expo-file-system": "~19.0.21",
+    "expo-sharing": "~14.0.8",
     "expo-status-bar": "~3.0.9",
     "firebase": "^12.11.0",
     "react": "19.1.0",

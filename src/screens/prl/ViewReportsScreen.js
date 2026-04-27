@@ -1,205 +1,181 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  FlatList,
-  TouchableOpacity,
+ FlatList,
   StyleSheet,
-  Modal,
-  TextInput,
-  Button
+  TouchableOpacity,
+  Alert,
 } from "react-native";
-import XLSX from "xlsx";
-import * as FileSystem from 'expo-file-system';
-import { db } from "../../services/firebaseConfig";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc
-} from "firebase/firestore";
 
-import { AuthContext } from "../../context/AuthContext";
+import { db } from "../../services/firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import * as XLSX from "xlsx";
 
 export default function ViewReportsScreen() {
   const [reports, setReports] = useState([]);
-  const [selectedReport, setSelectedReport] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [feedback, setFeedback] = useState("");
-  const [search, setSearch] = useState("");
-  const [filteredReports, setFilteredReports] = useState([]);
-  const { role } = useContext(AuthContext);
 
-  // Fetch reports
+  //  FETCHING REPORTS 
   const fetchReports = async () => {
-  const querySnapshot = await getDocs(collection(db, "reports"));
-  const data = querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
-  const exportToExcel = async () => {
-  try {
-    // Convert reports to worksheet
-    const worksheet = XLSX.utils.json_to_sheet(reports);
+    try {
+      const snap = await getDocs(collection(db, "reports"));
 
-    // Create workbook
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Reports");
+      const list = snap.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-    // Generate Excel file
-    const excelData = XLSX.write(workbook, {
-      type: "binary",
-      bookType: "xlsx"
-    });
-
-    // Convert to buffer
-    const buffer = new Uint8Array(
-      excelData.split("").map((char) => char.charCodeAt(0))
-    );
-
-    // File path
-    const path = `${RNFS.DownloadDirectoryPath}/Reports.xlsx`;
-
-    // Write file
-    await RNFS.writeFile(path, buffer, "ascii");
-
-    alert("Excel file saved to Downloads!");
-  } catch (error) {
-    alert(error.message);
-  }
-};
-
-  setReports(data);
-  setFilteredReports(data);
-};
-
-const handleSearch = (text) => {
-  setSearch(text);
-
-  const filtered = reports.filter((item) =>
-    item.courseName?.toLowerCase().includes(text.toLowerCase()) ||
-    item.className?.toLowerCase().includes(text.toLowerCase()) ||
-    item.lecturerName?.toLowerCase().includes(text.toLowerCase())
-  );
-
-  setFilteredReports(filtered);
-};
+      setReports(list);
+    } catch (err) {
+      console.log("REPORT ERROR:", err);
+    }
+  };
 
   useEffect(() => {
     fetchReports();
   }, []);
 
-  const openReport = (report) => {
-    setSelectedReport(report);
-    setModalVisible(true);
-  };
-
-  const handleFeedback = async () => {
-    if (!selectedReport) return;
+  //  EXPORTING TO EXCEL 
+  const exportToExcel = async () => {
+    if (reports.length === 0) {
+      Alert.alert("No data", "There are no reports to export.");
+      return;
+    }
 
     try {
-      await updateDoc(doc(db, "reports", selectedReport.id), {
-        feedback: feedback
+      // Formating data for Excel
+      const data = reports.map((item) => ({
+        Course: item.courseName,
+        Lecturer: item.lecturerName || "Unknown",
+        Topic: item.topicTaught,
+        Venue: item.venue,
+        Date: item.lectureDate,
+        Outcomes: item.learningOutcomes,
+      }));
+
+      // Createing worksheet
+      const worksheet = XLSX.utils.json_to_sheet(data);
+
+      // Createing workbook
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Reports");
+
+      // Converting to binary
+      const wbout = XLSX.write(workbook, {
+        type: "base64",
+        bookType: "xlsx",
       });
 
-      setModalVisible(false);
-      setFeedback("");
-      fetchReports();
+      const fileUri =
+        FileSystem.documentDirectory + "LectureReports.xlsx";
+
+      // Saveing file
+      await FileSystem.writeAsStringAsync(fileUri, wbout, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      // Share / Download
+      await Sharing.shareAsync(fileUri);
+
     } catch (error) {
-      alert(error.message);
+      console.log("Excel error:", error);
+      Alert.alert("Error", "Failed to export Excel file");
     }
   };
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => openReport(item)}
-    >
-      <Text style={styles.title}>{item.courseName}</Text>
-      <Text>{item.className}</Text>
-      <Text>{item.date}</Text>
-    </TouchableOpacity>
-  );
-
+  // UI 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>All Reports</Text>
+      <Text style={styles.title}> All Lecture Reports</Text>
+
+      {/*  EXPORTing BUTTON */}
+      <TouchableOpacity style={styles.button} onPress={exportToExcel}>
+        <Text style={styles.buttonText}>⬇ Download Excel</Text>
+      </TouchableOpacity>
 
       <FlatList
-        data={filteredReports}
+        data={reports}
         keyExtractor={(item) => item.id}
-        renderItem={renderItem}
+        ListEmptyComponent={
+          <Text style={styles.empty}>No reports found</Text>
+        }
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <Text style={styles.course}>{item.courseName}</Text>
+
+            <Text> Lecturer: {item.lecturerName || "Unknown"}</Text>
+            <Text> Topic: {item.topicTaught}</Text>
+            <Text> Venue: {item.venue}</Text>
+            <Text> Date: {item.lectureDate}</Text>
+            <Text> Outcomes: {item.learningOutcomes}</Text>
+          </View>
+        )}
       />
-
-      {/* MODAL FOR DETAILS */}
-      <Modal visible={modalVisible} animationType="slide">
-        <View style={styles.modal}>
-          {selectedReport && (
-            <>
-              {Object.entries(selectedReport).map(([key, value]) => (
-                <Text key={key}>
-                  {key}: {String(value)}
-                </Text>
-              ))}
-
-              {/* Only PRL can add feedback */}
-              {role === "prl" && (
-                <>
-                  <TextInput
-                    placeholder="Enter feedback"
-                    value={feedback}
-                    onChangeText={setFeedback}
-                    style={styles.input}
-                  />
-                  <Button title="Submit Feedback" onPress={handleFeedback} />
-                </>
-              )}
-              <Button title="Export to Excel" onPress={exportToExcel} />
-
-              <Button
-                title="Close"
-                onPress={() => setModalVisible(false)}
-              />
-            </>
-          )}
-        </View>
-      </Modal>
     </View>
   );
 }
 
+//  STYLES 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15
-  },
-  header: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 10
-  },
-  card: {
     padding: 15,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    marginBottom: 10,
-    borderRadius: 8
+    backgroundColor: "#eff6ff",
   },
+
   title: {
-    fontWeight: "bold"
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#1e40af",
+    marginBottom: 10,
   },
-  modal: {
-    padding: 20
+
+  button: {
+    backgroundColor: "#2563eb",
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 12,
+    alignItems: "center",
+    shadowColor: "#2563eb",
+    shadowOpacity: 0.25,
+    elevation: 3,
   },
-  searchInput: {
-  borderWidth: 1,
-  padding: 10,
-  marginBottom: 10,
-  borderRadius: 8
-},
-  input: {
-    borderWidth: 1,
-    padding: 10,
-    marginVertical: 10
-  }
+
+  buttonText: {
+    color: "white",
+    fontWeight: "700",
+  },
+
+  card: {
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 14,
+    marginBottom: 10,
+    borderLeftWidth: 5,
+    borderLeftColor: "#2563eb",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    elevation: 2,
+  },
+
+  course: {
+    fontWeight: "800",
+    fontSize: 16,
+    color: "#0f172a",
+    marginBottom: 6,
+  },
+
+  text: {
+    color: "#475569",
+    marginTop: 2,
+  },
+
+  empty: {
+    textAlign: "center",
+    marginTop: 30,
+    color: "#64748b",
+  },
 });

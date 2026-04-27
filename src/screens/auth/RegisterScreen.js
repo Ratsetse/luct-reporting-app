@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Text, Alert } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  Alert,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../services/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
@@ -10,74 +19,139 @@ export default function RegisterScreen({ navigation }) {
   const [role, setRole] = useState("student");
 
   const handleRegister = async () => {
-    // Basic validation
     if (!email || !password || !role) {
-      Alert.alert("Validation Error", "All fields are required.");
+      Alert.alert("Error", "All fields are required");
       return;
     }
 
     if (password.length < 6) {
-      Alert.alert("Validation Error", "Password must be at least 6 characters.");
+      Alert.alert("Error", "Password must be at least 6 characters");
       return;
     }
 
     try {
-      console.log("Registering user:", email, role);
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
-      console.log("User created:", userCred.user.uid);
+      const userCred = await createUserWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
 
-      // Save additional data in Firestore
+      const cleanRole = role.toLowerCase().trim();
+
       await setDoc(doc(db, "users", userCred.user.uid), {
-        email,
-        role,
+        email: email.trim(),
+        role: cleanRole,
       });
 
-      Alert.alert("Success", "Account created successfully!");
-      navigation.goBack(); // go back to login
-
+      Alert.alert("Success", "Account created!");
+      navigation.goBack();
     } catch (error) {
-      console.error("Registration error:", error);
-      Alert.alert("Registration Failed", error.message);
+      console.log(error);
+      Alert.alert("Error", error.message);
     }
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text>Email</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}> Register</Text>
+
       <TextInput
         value={email}
         onChangeText={setEmail}
-        placeholder="Enter your email"
-        keyboardType="email-address"
+        placeholder="Enter email"
         autoCapitalize="none"
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
+        style={styles.input}
       />
 
-      <Text>Password</Text>
       <TextInput
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        placeholder="Enter your password"
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
+        placeholder="Enter password"
+        style={styles.input}
       />
 
-      <Text>Role (student/lecturer/prl/pl)</Text>
-      <TextInput
-        value={role}
-        onChangeText={setRole}
-        placeholder="Enter your role"
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
-      />
+      <Text style={styles.label}>Select Role</Text>
 
-      <Button title="Register" onPress={handleRegister} />
+      <View style={styles.pickerWrapper}>
+        <Picker
+          selectedValue={role}
+          onValueChange={(itemValue) => setRole(itemValue)}
+        >
+          <Picker.Item label="Student" value="student" />
+          <Picker.Item label="Lecturer" value="lecturer" />
+          <Picker.Item label="PRL" value="prl" />
+          <Picker.Item label="PL" value="pl" />
+        </Picker>
+      </View>
+
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={{ color: "white", fontWeight: "bold" }}>
+          Create Account
+        </Text>
+      </TouchableOpacity>
 
       <Text
         onPress={() => navigation.goBack()}
-        style={{ marginTop: 20, color: "blue" }}
+        style={styles.link}
       >
         Already have an account? Login
       </Text>
     </View>
   );
 }
+
+// STYLES 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "center",
+    backgroundColor: "#eff6ff",
+  },
+
+  title: {
+    fontSize: 26,
+    fontWeight: "800",
+    textAlign: "center",
+    color: "#1e40af",
+    marginBottom: 25,
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#dbeafe",
+    backgroundColor: "#fff",
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+
+  label: {
+    marginBottom: 5,
+    fontWeight: "600",
+    color: "#1e3a8a",
+  },
+
+  pickerWrapper: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#dbeafe",
+  },
+
+  button: {
+    backgroundColor: "#2563eb",
+    padding: 14,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+
+  link: {
+    marginTop: 20,
+    textAlign: "center",
+    color: "#2563eb",
+    fontWeight: "600",
+  },
+});

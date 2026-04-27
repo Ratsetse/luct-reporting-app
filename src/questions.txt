@@ -1,0 +1,197 @@
+okay let's make sure that were done with every thing in the lecture part here is the code to update (import React, { useState } from "react";
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { db } from "../../services/firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+
+export default function CreateReportScreen({ route, navigation }) {
+  const { courseId, courseName } = route.params;
+
+  const [reportText, setReportText] = useState("");
+
+  const submitReport = async () => {
+    if (!reportText) {
+      Alert.alert("Error", "Write something");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "reports"), {
+        courseId,
+        courseName,
+        report: reportText,
+        createdAt: new Date(),
+      });
+
+      Alert.alert("Success", "Report submitted");
+      navigation.goBack();
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Create Report</Text>
+
+      <Text>Course: {courseName}</Text>
+
+      <TextInput
+        placeholder="Write report..."
+        value={reportText}
+        onChangeText={setReportText}
+        style={styles.input}
+        multiline
+      />
+
+      <Button title="Submit Report" onPress={submitReport} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  title: { fontSize: 22, fontWeight: "bold", marginBottom: 10 },
+  input: { borderWidth: 1, padding: 10, marginVertical: 10, height: 100 },
+});), (import React, { useEffect, useState, useContext } from "react";
+import { View, Text, FlatList, Button, StyleSheet } from "react-native";
+import { db } from "../../services/firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+import { AuthContext } from "../../context/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "../../services/firebaseConfig";
+
+export default function LecturerDashboard({ navigation }) {
+  const { user } = useContext(AuthContext);
+  const [courses, setCourses] = useState([]);
+
+  // 📥 Fetch ONLY courses assigned to this lecturer
+  const fetchCourses = async () => {
+    const snapshot = await getDocs(collection(db, "courses"));
+
+    const myCourses = snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(course => course.lecturerId === user.uid);
+
+    setCourses(myCourses);
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>My Courses</Text>
+
+      {courses.length === 0 ? (
+        <Text>No courses assigned yet</Text>
+      ) : (
+        <FlatList
+          data={courses}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Text style={styles.course}>{item.name}</Text>
+
+              <Button
+                title="Create Report"
+                onPress={() =>
+                  navigation.navigate("CreateReport", {
+                    courseId: item.id,
+                    courseName: item.name,
+                  })
+                }
+              />
+            </View>
+          )}
+        />
+      )}
+
+      <Button title="Logout" onPress={handleLogout} color="red" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  title: { fontSize: 22, fontWeight: "bold", marginBottom: 10 },
+  card: { padding: 10, borderWidth: 1, marginBottom: 10 },
+  course: { fontWeight: "bold", marginBottom: 5 },
+});), (import React, { useEffect, useState } from "react";
+import { View, Text, FlatList } from "react-native";
+import { db } from "../../services/firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+
+export default function ViewAttendanceScreen() {
+  const [data, setData] = useState([]);
+
+  const fetchAttendance = async () => {
+    const snapshot = await getDocs(collection(db, "attendance"));
+    const list = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    setData(list);
+  };
+
+  useEffect(() => {
+    fetchAttendance();
+  }, []);
+
+  return (
+    <View style={{ padding: 20 }}>
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Text>
+            {item.className} - {item.status}
+          </Text>
+        )}
+      />
+    </View>
+  );
+}), (import React, { useEffect, useState, useContext } from "react";
+import { View, Text, FlatList } from "react-native";
+import { db } from "../../services/firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+import { AuthContext } from "../../context/AuthContext";
+
+export default function ViewRatingsScreen() {
+  const [ratings, setRatings] = useState([]);
+  const { user } = useContext(AuthContext);
+
+  const fetchRatings = async () => {
+    const snapshot = await getDocs(collection(db, "ratings"));
+    const list = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    // Only show ratings for this lecturer
+    const filtered = list.filter(r => r.lecturerId === user.uid);
+    setRatings(filtered);
+  };
+
+  useEffect(() => {
+    fetchRatings();
+  }, []);
+
+  return (
+    <View style={{ padding: 20 }}>
+      <FlatList
+        data={ratings}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Text>
+            ⭐ {item.rating} - {item.comment}
+          </Text>
+        )}
+      />
+    </View>
+  );
+} ) and give me the full working files 

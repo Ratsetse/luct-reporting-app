@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Text, Alert } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  Alert,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
 
@@ -8,54 +15,100 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    // Basic validation
     if (!email || !password) {
       Alert.alert("Validation Error", "Email and password cannot be empty.");
       return;
     }
 
     try {
-      console.log("Attempting login with:", email, password);
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
+
       console.log("Login successful:", userCredential.user);
 
-      // Navigate or do something after login
-      // navigation.replace("Home"); // example
+    
     } catch (error) {
-      console.error("Login error:", error);
+      console.log("Login error:", error);
       Alert.alert("Login Failed", error.message);
     }
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text>Email</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}> Login</Text>
+
       <TextInput
         value={email}
         onChangeText={setEmail}
         placeholder="Enter your email"
         keyboardType="email-address"
         autoCapitalize="none"
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
+        style={styles.input}
       />
 
-      <Text>Password</Text>
       <TextInput
         value={password}
         onChangeText={setPassword}
         secureTextEntry
         placeholder="Enter your password"
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
+        style={styles.input}
       />
 
-      <Button title="Login" onPress={handleLogin} />
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={{ color: "white", fontWeight: "bold" }}>Login</Text>
+      </TouchableOpacity>
 
       <Text
         onPress={() => navigation.navigate("Register")}
-        style={{ marginTop: 20, color: "blue" }}
+        style={styles.link}
       >
         Don't have an account? Register
       </Text>
     </View>
   );
 }
+
+//STYLE
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "center",
+    backgroundColor: "#eff6ff",
+  },
+
+  title: {
+    fontSize: 26,
+    fontWeight: "800",
+    textAlign: "center",
+    color: "#1e40af",
+    marginBottom: 25,
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#dbeafe",
+    backgroundColor: "#fff",
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+
+  button: {
+    backgroundColor: "#2563eb",
+    padding: 14,
+    borderRadius: 12,
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  link: {
+    marginTop: 20,
+    color: "#2563eb",
+    textAlign: "center",
+    fontWeight: "600",
+  },
+});
