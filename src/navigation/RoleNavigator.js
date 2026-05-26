@@ -52,7 +52,15 @@ export default function RoleNavigator() {
     normalizedRole === "lecturer" || normalizedRole === "lecture";
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: true }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerStyle: { backgroundColor: "#eff6ff" },
+        headerTintColor: "#1e3a8a",
+        headerTitleStyle: { fontWeight: "800" },
+        contentStyle: { backgroundColor: "#eff6ff" },
+      }}
+    >
 
       {/* ================= STUDENT ================= */}
       {normalizedRole === "student" && (

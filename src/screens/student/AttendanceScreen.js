@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Alert,
   TouchableOpacity,
-  ScrollView,
 } from "react-native";
 
 import { Picker } from "@react-native-picker/picker";
@@ -20,6 +19,7 @@ import {
 } from "firebase/firestore";
 
 import { AuthContext } from "../../context/AuthContext";
+import { ScrollScreenContainer } from "../../components/ScreenContainer";
 
 export default function AttendanceScreen() {
   const { user } = useContext(AuthContext);
@@ -95,7 +95,7 @@ export default function AttendanceScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollScreenContainer style={styles.container}>
 
       {/* HEADER */}
       <View style={styles.header}>
@@ -177,7 +177,7 @@ export default function AttendanceScreen() {
         </Text>
       </TouchableOpacity>
 
-    </ScrollView>
+    </ScrollScreenContainer>
   );
 }
 

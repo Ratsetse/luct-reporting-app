@@ -9,6 +9,7 @@ import {
 
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 export default function ViewAttendanceScreen() {
   const [data, setData] = useState([]);
@@ -47,7 +48,7 @@ export default function ViewAttendanceScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> Attendance Records</Text>
 
       <FlatList
@@ -88,7 +89,7 @@ export default function ViewAttendanceScreen() {
           </View>
         )}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 

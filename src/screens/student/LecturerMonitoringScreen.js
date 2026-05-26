@@ -5,12 +5,12 @@ import {
   FlatList,
   StyleSheet,
   ActivityIndicator,
-  SafeAreaView,
 } from "react-native";
 
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 export default function LecturerMonitoringScreen() {
   const { user } = useContext(AuthContext);
@@ -82,7 +82,7 @@ export default function LecturerMonitoringScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> My Attendance</Text>
       <Text style={styles.subtitle}>Blue progress dashboard</Text>
 
@@ -110,7 +110,7 @@ export default function LecturerMonitoringScreen() {
           </View>
         )}
       />
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 

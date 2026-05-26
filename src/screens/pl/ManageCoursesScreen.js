@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableOpacity
 } from "react-native";
+import { ScreenContainer } from "../../components/ScreenContainer";
 import { db, auth } from "../../services/firebaseConfig";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { signOut } from "firebase/auth";
@@ -46,7 +47,7 @@ export default function ManageCoursesScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
 
       <Text style={styles.title}> Manage Courses</Text>
 
@@ -85,7 +86,7 @@ export default function ManageCoursesScreen() {
         <Text style={{ color: "white" }}>Logout</Text>
       </TouchableOpacity>
 
-    </View>
+    </ScreenContainer>
   );
 }
 

@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet } from "react-native";
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 export default function ViewRatingsScreen() {
   const [ratings, setRatings] = useState([]);
@@ -36,7 +37,7 @@ export default function ViewRatingsScreen() {
   }, [user]);
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
 
       <Text style={styles.title}> My Ratings</Text>
 
@@ -61,7 +62,7 @@ export default function ViewRatingsScreen() {
         />
       )}
 
-    </View>
+    </ScreenContainer>
   );
 }
 

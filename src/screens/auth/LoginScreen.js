@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
+import { ScreenContainer, fullScreenEdges } from "../../components/ScreenContainer";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -37,37 +38,44 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}> Login</Text>
+    <ScreenContainer edges={fullScreenEdges} style={styles.container}>
+      <View style={styles.panel}>
+        <View style={styles.brandMark}>
+          <Text style={styles.brandMarkText}>LR</Text>
+        </View>
 
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Enter your email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        style={styles.input}
-      />
+        <Text style={styles.title}>LUCT Reporting</Text>
+        <Text style={styles.subtitle}>Sign in to manage reports, attendance, and feedback.</Text>
 
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        placeholder="Enter your password"
-        style={styles.input}
-      />
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter your email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          style={styles.input}
+        />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={{ color: "white", fontWeight: "bold" }}>Login</Text>
-      </TouchableOpacity>
+        <TextInput
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          placeholder="Enter your password"
+          style={styles.input}
+        />
 
-      <Text
-        onPress={() => navigation.navigate("Register")}
-        style={styles.link}
-      >
-        Don't have an account? Register
-      </Text>
-    </View>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+
+        <Text
+          onPress={() => navigation.navigate("Register")}
+          style={styles.link}
+        >
+          Don't have an account? Register
+        </Text>
+      </View>
+    </ScreenContainer>
   );
 }
 
@@ -77,15 +85,48 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#eef6f3",
+  },
+
+  panel: {
+    backgroundColor: "#ffffff",
+    borderRadius: 24,
+    padding: 22,
+    borderWidth: 1,
+    borderColor: "#dbeafe",
+    shadowColor: "#0f172a",
+    shadowOpacity: 0.08,
+    shadowRadius: 18,
+    elevation: 4,
+  },
+
+  brandMark: {
+    width: 56,
+    height: 56,
+    borderRadius: 18,
+    backgroundColor: "#123c69",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+
+  brandMarkText: {
+    color: "#ffffff",
+    fontSize: 18,
+    fontWeight: "900",
   },
 
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "800",
-    textAlign: "center",
-    color: "#1e40af",
-    marginBottom: 25,
+    color: "#123c69",
+  },
+
+  subtitle: {
+    color: "#64748b",
+    lineHeight: 20,
+    marginTop: 6,
+    marginBottom: 22,
   },
 
   input: {
@@ -98,17 +139,22 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "#2563eb",
+    backgroundColor: "#123c69",
     padding: 14,
     borderRadius: 12,
     alignItems: "center",
     marginTop: 10,
   },
 
+  buttonText: {
+    color: "white",
+    fontWeight: "800",
+  },
+
   link: {
     marginTop: 20,
-    color: "#2563eb",
+    color: "#0f766e",
     textAlign: "center",
-    fontWeight: "600",
+    fontWeight: "700",
   },
 });

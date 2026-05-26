@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
+import { ScreenContainer } from "../../components/ScreenContainer";
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 
@@ -54,7 +55,7 @@ export default function PRLMonitoringScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> PRL Monitoring Dashboard</Text>
 
       {loading ? (
@@ -102,7 +103,7 @@ export default function PRLMonitoringScreen() {
           )}
         </>
       )}
-    </View>
+    </ScreenContainer>
   );
 }
 

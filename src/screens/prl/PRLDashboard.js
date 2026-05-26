@@ -1,41 +1,45 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { ScrollScreenContainer } from "../../components/ScreenContainer";
 import { signOut } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
 
 export default function PRLDashboard({ navigation }) {
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}> PRL Dashboard</Text>
+    <ScrollScreenContainer contentContainerStyle={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>PRL Dashboard</Text>
+        <Text style={styles.subtitle}>Review lecturers, reports, classes, and monitoring.</Text>
+      </View>
 
-      <TouchableOpacity style={styles.card}
+      <TouchableOpacity style={[styles.card, styles.cardBlue]}
         onPress={() => navigation.navigate("PRLLecturersScreen")}>
-        <Text> Lecturers</Text>
+        <Text style={styles.cardText}>Lecturers</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card}
+      <TouchableOpacity style={[styles.card, styles.cardGreen]}
         onPress={() => navigation.navigate("PRLViewReports")}>
-        <Text> Reports</Text>
+        <Text style={styles.cardText}>Reports</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card}
+      <TouchableOpacity style={[styles.card, styles.cardAmber]}
         onPress={() => navigation.navigate("PRLMonitoringScreen")}>
-        <Text> Monitoring</Text>
+        <Text style={styles.cardText}>Monitoring</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card}
+      <TouchableOpacity style={[styles.card, styles.cardPurple]}
         onPress={() => navigation.navigate("PRLClassesScreen")}>
-        <Text> Classes</Text>
+        <Text style={styles.cardText}>Classes</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.logout}
         onPress={() => signOut(auth)}
       >
-        <Text style={{ color: "white" }}>Logout</Text>
+        <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </ScrollScreenContainer>
   );
 }
 
@@ -43,14 +47,26 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#eef6f3",
+  },
+
+  header: {
+    backgroundColor: "#123c69",
+    borderRadius: 22,
+    padding: 22,
+    marginBottom: 18,
   },
 
   title: {
     fontSize: 26,
     fontWeight: "800",
-    color: "#1e40af",
-    marginBottom: 20,
+    color: "#ffffff",
+  },
+
+  subtitle: {
+    color: "#dbeafe",
+    lineHeight: 20,
+    marginTop: 6,
   },
 
   card: {
@@ -59,7 +75,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginBottom: 12,
     borderLeftWidth: 5,
-    borderLeftColor: "#2563eb",
     shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 10,
@@ -72,6 +87,11 @@ const styles = StyleSheet.create({
     color: "#0f172a",
   },
 
+  cardBlue: { borderLeftColor: "#2563eb" },
+  cardGreen: { borderLeftColor: "#0f766e" },
+  cardAmber: { borderLeftColor: "#f59e0b" },
+  cardPurple: { borderLeftColor: "#7c3aed" },
+
   logout: {
     marginTop: 25,
     backgroundColor: "#ef4444",
@@ -81,5 +101,10 @@ const styles = StyleSheet.create({
     shadowColor: "#ef4444",
     shadowOpacity: 0.3,
     elevation: 3,
+  },
+
+  logoutText: {
+    color: "white",
+    fontWeight: "800",
   },
 });

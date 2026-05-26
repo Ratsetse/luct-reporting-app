@@ -12,6 +12,7 @@ import { Picker } from "@react-native-picker/picker";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../services/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
+import { ScreenContainer, fullScreenEdges } from "../../components/ScreenContainer";
 
 export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -52,52 +53,55 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}> Register</Text>
+    <ScreenContainer edges={fullScreenEdges} style={styles.container}>
+      <View style={styles.panel}>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Choose your role and join the reporting workflow.</Text>
 
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Enter email"
-        autoCapitalize="none"
-        style={styles.input}
-      />
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter email"
+          autoCapitalize="none"
+          style={styles.input}
+        />
 
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        placeholder="Enter password"
-        style={styles.input}
-      />
+        <TextInput
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          placeholder="Enter password"
+          style={styles.input}
+        />
 
-      <Text style={styles.label}>Select Role</Text>
+        <Text style={styles.label}>Select Role</Text>
 
-      <View style={styles.pickerWrapper}>
-        <Picker
-          selectedValue={role}
-          onValueChange={(itemValue) => setRole(itemValue)}
+        <View style={styles.pickerWrapper}>
+          <Picker
+            selectedValue={role}
+            onValueChange={(itemValue) => setRole(itemValue)}
+          >
+            <Picker.Item label="Student" value="student" />
+            <Picker.Item label="Lecturer" value="lecturer" />
+            <Picker.Item label="PRL" value="prl" />
+            <Picker.Item label="PL" value="pl" />
+          </Picker>
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={{ color: "white", fontWeight: "bold" }}>
+            Create Account
+          </Text>
+        </TouchableOpacity>
+
+        <Text
+          onPress={() => navigation.goBack()}
+          style={styles.link}
         >
-          <Picker.Item label="Student" value="student" />
-          <Picker.Item label="Lecturer" value="lecturer" />
-          <Picker.Item label="PRL" value="prl" />
-          <Picker.Item label="PL" value="pl" />
-        </Picker>
-      </View>
-
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={{ color: "white", fontWeight: "bold" }}>
-          Create Account
+          Already have an account? Login
         </Text>
-      </TouchableOpacity>
-
-      <Text
-        onPress={() => navigation.goBack()}
-        style={styles.link}
-      >
-        Already have an account? Login
-      </Text>
-    </View>
+      </View>
+    </ScreenContainer>
   );
 }
 
@@ -107,15 +111,32 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#eef6f3",
+  },
+
+  panel: {
+    backgroundColor: "#ffffff",
+    borderRadius: 24,
+    padding: 22,
+    borderWidth: 1,
+    borderColor: "#dbeafe",
+    shadowColor: "#0f172a",
+    shadowOpacity: 0.08,
+    shadowRadius: 18,
+    elevation: 4,
   },
 
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "800",
-    textAlign: "center",
-    color: "#1e40af",
-    marginBottom: 25,
+    color: "#123c69",
+  },
+
+  subtitle: {
+    color: "#64748b",
+    lineHeight: 20,
+    marginTop: 6,
+    marginBottom: 22,
   },
 
   input: {
@@ -142,7 +163,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "#2563eb",
+    backgroundColor: "#123c69",
     padding: 14,
     borderRadius: 12,
     alignItems: "center",
@@ -151,7 +172,7 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 20,
     textAlign: "center",
-    color: "#2563eb",
-    fontWeight: "600",
+    color: "#0f766e",
+    fontWeight: "700",
   },
 });

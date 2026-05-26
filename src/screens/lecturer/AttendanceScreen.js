@@ -10,6 +10,7 @@ import {
 
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 export default function AttendanceScreen({ route, navigation }) {
   const { classId, courseId, className } = route.params;
@@ -91,7 +92,7 @@ export default function AttendanceScreen({ route, navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> {className} Attendance</Text>
 
       <FlatList
@@ -125,7 +126,7 @@ export default function AttendanceScreen({ route, navigation }) {
           </TouchableOpacity>
         )}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 

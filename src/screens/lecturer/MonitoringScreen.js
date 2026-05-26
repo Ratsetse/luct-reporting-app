@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { ScrollScreenContainer } from "../../components/ScreenContainer";
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 
@@ -73,7 +74,7 @@ export default function MonitoringScreen({ route }) {
     .slice(0, 3);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollScreenContainer style={styles.container}>
       <Text style={styles.title}> Monitoring</Text>
 
       {!courseId && (
@@ -102,7 +103,7 @@ export default function MonitoringScreen({ route }) {
           </View>
         );
       })}
-    </ScrollView>
+    </ScrollScreenContainer>
   );
 }
 

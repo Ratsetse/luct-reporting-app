@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import { ScreenContainer } from "../../components/ScreenContainer";
 import { db } from "../../services/firebaseConfig";
 import {
   collection,
@@ -101,7 +102,7 @@ export default function AssignLecturerScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}>Assign Courses & Classes</Text>
 
       {/*  COURSES */}
@@ -185,7 +186,7 @@ export default function AssignLecturerScreen() {
       {loading && (
         <ActivityIndicator size="large" color="#2563eb" />
       )}
-    </View>
+    </ScreenContainer>
   );
 }
 

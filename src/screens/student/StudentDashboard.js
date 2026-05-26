@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  SafeAreaView,
 } from "react-native";
 import { auth } from "../../services/firebaseConfig";
 import { signOut } from "firebase/auth";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 export default function StudentDashboard({ navigation }) {
   const handleLogout = async () => {
@@ -21,13 +21,13 @@ export default function StudentDashboard({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ScreenContainer style={styles.container}>
 
       {/* HEADER */}
       <View style={styles.header}>
-        <Text style={styles.title}> Student Portal</Text>
+        <Text style={styles.title}>Student Portal</Text>
         <Text style={styles.subtitle}>
-          Welcome back, Stay on top of your studies
+          Welcome back. Stay on top of attendance, feedback, and progress.
         </Text>
       </View>
 
@@ -38,7 +38,7 @@ export default function StudentDashboard({ navigation }) {
           style={[styles.card, styles.blueCard]}
           onPress={() => navigation.navigate("StudentAttendance")}
         >
-          <Text style={styles.cardTitle}> Attendance</Text>
+          <Text style={styles.cardTitle}>Attendance</Text>
           <Text style={styles.cardText}>
             Mark your class attendance
           </Text>
@@ -48,7 +48,7 @@ export default function StudentDashboard({ navigation }) {
           style={[styles.card, styles.lightBlueCard]}
           onPress={() => navigation.navigate("StudentRating")}
         >
-          <Text style={styles.cardTitle}> Lecturer Rating</Text>
+          <Text style={styles.cardTitle}>Lecturer Rating</Text>
           <Text style={styles.cardText}>
             Share feedback on lecturers
           </Text>
@@ -58,7 +58,7 @@ export default function StudentDashboard({ navigation }) {
           style={[styles.card, styles.darkBlueCard]}
           onPress={() => navigation.navigate("StudentMonitoring")}
         >
-          <Text style={styles.cardTitle}> Monitoring</Text>
+          <Text style={styles.cardTitle}>Monitoring</Text>
           <Text style={styles.cardText}>
             Track your performance & attendance
           </Text>
@@ -71,33 +71,41 @@ export default function StudentDashboard({ navigation }) {
         style={styles.logoutBtn}
         onPress={handleLogout}
       >
-        <Text style={styles.logoutText}> Log Out</Text>
+        <Text style={styles.logoutText}>Log Out</Text>
       </TouchableOpacity>
 
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f6ff",
+    backgroundColor: "#eef6f3",
     padding: 20,
   },
 
   header: {
+    backgroundColor: "#123c69",
+    padding: 22,
+    borderRadius: 22,
     marginBottom: 25,
+    shadowColor: "#0f172a",
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    elevation: 5,
   },
 
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#1d4ed8",
+    color: "#ffffff",
   },
 
   subtitle: {
-    marginTop: 5,
-    color: "#64748b",
+    marginTop: 8,
+    color: "#dbeafe",
+    lineHeight: 20,
   },
 
   cardContainer: {
@@ -105,9 +113,11 @@ const styles = StyleSheet.create({
   },
 
   card: {
+    backgroundColor: "#ffffff",
     padding: 20,
     borderRadius: 18,
     marginBottom: 15,
+    borderLeftWidth: 6,
     shadowColor: "#000",
     shadowOpacity: 0.08,
     shadowRadius: 10,
@@ -115,26 +125,26 @@ const styles = StyleSheet.create({
   },
 
   blueCard: {
-    backgroundColor: "#2563eb",
+    borderLeftColor: "#2563eb",
   },
 
   lightBlueCard: {
-    backgroundColor: "#3b82f6",
+    borderLeftColor: "#0f766e",
   },
 
   darkBlueCard: {
-    backgroundColor: "#1e40af",
+    borderLeftColor: "#f59e0b",
   },
 
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "white",
+    color: "#0f172a",
   },
 
   cardText: {
     marginTop: 6,
-    color: "#e0e7ff",
+    color: "#64748b",
   },
 
   logoutBtn: {

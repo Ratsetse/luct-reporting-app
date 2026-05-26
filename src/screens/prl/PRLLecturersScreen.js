@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
+import { ScreenContainer } from "../../components/ScreenContainer";
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 
@@ -39,7 +40,7 @@ export default function PRLLecturersScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> Lecturers</Text>
 
       {loading ? (
@@ -60,7 +61,7 @@ export default function PRLLecturersScreen() {
           )}
         />
       )}
-    </View>
+    </ScreenContainer>
   );
 }
 

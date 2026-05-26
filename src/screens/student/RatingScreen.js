@@ -7,7 +7,6 @@ import {
   Alert,
   FlatList,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
 
 import { db } from "../../services/firebaseConfig";
@@ -19,6 +18,7 @@ import {
 } from "firebase/firestore";
 
 import { AuthContext } from "../../context/AuthContext";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 export default function RatingScreen() {
   const { user } = useContext(AuthContext);
@@ -86,7 +86,7 @@ export default function RatingScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> Rate Lecturer</Text>
       <Text style={styles.subtitle}>Give feedback to improve teaching</Text>
 
@@ -143,7 +143,7 @@ export default function RatingScreen() {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit Rating</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 

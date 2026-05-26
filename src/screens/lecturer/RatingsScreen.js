@@ -11,6 +11,7 @@ import {
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 export default function RatingsScreen() {
   const { user } = useContext(AuthContext);
@@ -119,7 +120,7 @@ export default function RatingsScreen() {
   //  COURSE LIST 
   if (!selectedCourse) {
     return (
-      <View style={styles.container}>
+      <ScreenContainer style={styles.container}>
         <Text style={styles.title}> Select Course</Text>
 
         <FlatList
@@ -134,13 +135,13 @@ export default function RatingsScreen() {
             </TouchableOpacity>
           )}
         />
-      </View>
+      </ScreenContainer>
     );
   }
 
   //  STUDENT LIST 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> {selectedCourse.name}</Text>
 
       <TouchableOpacity
@@ -175,7 +176,7 @@ export default function RatingsScreen() {
           </View>
         )}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 

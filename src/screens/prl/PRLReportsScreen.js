@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, TextInput, Button, StyleSheet } from "react-native";
+import { ScreenContainer } from "../../components/ScreenContainer";
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
 
@@ -39,7 +40,7 @@ export default function PRLReportsScreen({ route }) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}>Reports - {courseName}</Text>
 
       <FlatList
@@ -67,7 +68,7 @@ export default function PRLReportsScreen({ route }) {
           </View>
         )}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 

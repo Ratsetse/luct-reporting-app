@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { ScreenContainer } from "../../components/ScreenContainer";
 import { db, auth } from "../../services/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { signOut } from "firebase/auth";
@@ -44,7 +45,7 @@ export default function PLCoursesScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> PL Courses</Text>
 
       {loading ? (
@@ -77,7 +78,7 @@ export default function PLCoursesScreen() {
       <TouchableOpacity style={styles.logout} onPress={handleLogout}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
-    </View>
+    </ScreenContainer>
   );
 }
 

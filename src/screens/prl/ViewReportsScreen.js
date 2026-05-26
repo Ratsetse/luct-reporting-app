@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
@@ -88,7 +89,7 @@ export default function ViewReportsScreen() {
 
   // UI 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> All Lecture Reports</Text>
 
       {/*  EXPORTing BUTTON */}
@@ -114,7 +115,7 @@ export default function ViewReportsScreen() {
           </View>
         )}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 

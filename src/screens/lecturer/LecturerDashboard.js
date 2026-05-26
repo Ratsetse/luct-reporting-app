@@ -5,7 +5,6 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
 } from "react-native";
 
 import { db, auth } from "../../services/firebaseConfig";
@@ -13,6 +12,7 @@ import { collection, getDocs } from "firebase/firestore";
 
 import { AuthContext } from "../../context/AuthContext";
 import { signOut } from "firebase/auth";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 export default function LecturerDashboard({ navigation }) {
   const { user } = useContext(AuthContext);
@@ -75,17 +75,17 @@ export default function LecturerDashboard({ navigation }) {
 
     return (
       <View style={styles.card}>
-        <Text style={styles.courseTitle}>📘 {item.name}</Text>
-        <Text style={styles.subText}> {todayFormatted}</Text>
+        <Text style={styles.courseTitle}>{item.name}</Text>
+        <Text style={styles.subText}>{todayFormatted}</Text>
 
-        <Text style={styles.sectionTitle}> Classes</Text>
+        <Text style={styles.sectionTitle}>Classes</Text>
 
         {courseClasses.length === 0 ? (
           <Text style={styles.empty}>No classes assigned</Text>
         ) : (
           courseClasses.map((cls) => (
             <View key={cls.id} style={styles.classBox}>
-              <Text style={styles.classText}> {cls.className}</Text>
+              <Text style={styles.classText}>{cls.className}</Text>
 
               <TouchableOpacity
                 style={styles.viewBtn}
@@ -97,9 +97,7 @@ export default function LecturerDashboard({ navigation }) {
                   })
                 }
               >
-                <Text style={styles.viewBtnText}>
-                   View Attendance
-                </Text>
+                <Text style={styles.viewBtnText}>View Attendance</Text>
               </TouchableOpacity>
             </View>
           ))
@@ -115,38 +113,38 @@ export default function LecturerDashboard({ navigation }) {
             })
           }
         >
-          <Text style={styles.primaryText}> Create Report</Text>
+          <Text style={styles.primaryText}>Create Report</Text>
         </TouchableOpacity>
       </View>
     );
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.greeting}> Lecturer Dashboard</Text>
-      <Text style={styles.date}> {todayFormatted}</Text>
+    <ScreenContainer style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.greeting}>Lecturer Dashboard</Text>
+        <Text style={styles.date}>{todayFormatted}</Text>
+      </View>
 
       {/*  GLOBAL RATING BUTTON */}
       <TouchableOpacity
         style={styles.ratingGlobalBtn}
         onPress={() => navigation.navigate("LecturerRatings")}
       >
-        <Text style={styles.ratingGlobalText}>
-           View All Ratings
-        </Text>
+        <Text style={styles.ratingGlobalText}>View All Ratings</Text>
       </TouchableOpacity>
 
       <FlatList
         data={courses}
         keyExtractor={(item) => item.id}
         renderItem={renderCourse}
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={{ paddingBottom: 24 }}
       />
 
       <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-        <Text style={styles.logoutText}> Logout</Text>
+        <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 
@@ -154,19 +152,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f0f6ff",
+    backgroundColor: "#eef6f3",
+  },
+
+  header: {
+    backgroundColor: "#123c69",
+    borderRadius: 22,
+    padding: 22,
+    marginBottom: 14,
   },
 
   greeting: {
     fontSize: 26,
     fontWeight: "bold",
-    color: "#1e3a8a",
+    color: "#ffffff",
   },
 
   date: {
     fontSize: 14,
-    color: "#475569",
-    marginBottom: 10,
+    color: "#dbeafe",
+    marginTop: 6,
   },
 
   ratingGlobalBtn: {

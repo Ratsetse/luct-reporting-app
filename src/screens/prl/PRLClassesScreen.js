@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { ScreenContainer } from "../../components/ScreenContainer";
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 
@@ -31,7 +32,7 @@ export default function PRLClassesScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> PRL Classes</Text>
 
       <TouchableOpacity style={styles.refreshBtn} onPress={fetchClasses}>
@@ -53,7 +54,7 @@ export default function PRLClassesScreen() {
           )}
         />
       )}
-    </View>
+    </ScreenContainer>
   );
 }
 

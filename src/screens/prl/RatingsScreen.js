@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { ScreenContainer } from "../../components/ScreenContainer";
 import { db } from "../../services/firebaseConfig";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
@@ -64,7 +65,7 @@ export default function RatingsScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.title}> Rate Lecturers</Text>
 
       <FlatList
@@ -90,7 +91,7 @@ export default function RatingsScreen() {
           </View>
         )}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 

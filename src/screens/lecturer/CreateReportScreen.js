@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert } from "react-native";
+import { Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { ScrollScreenContainer } from "../../components/ScreenContainer";
 import { db } from "../../services/firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
 
@@ -48,7 +49,7 @@ export default function CreateReportScreen({ route, navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollScreenContainer style={styles.container}>
       <Text style={styles.title}>Create Lecture Report</Text>
       <Text>Course: {courseName}</Text>
 
@@ -64,7 +65,7 @@ export default function CreateReportScreen({ route, navigation }) {
       ))}
 
       <Button title="Submit Report" onPress={submitReport} />
-    </ScrollView>
+    </ScrollScreenContainer>
   );
 }
 

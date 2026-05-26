@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { ScrollScreenContainer } from "../../components/ScreenContainer";
 
 export default function ReportDetailsScreen({ route }) {
   const { report } = route.params || {};
@@ -20,7 +21,7 @@ export default function ReportDetailsScreen({ route }) {
   );
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollScreenContainer style={styles.container}>
       <Text style={styles.title}>📄 Report Details</Text>
 
       <View style={styles.card}>
@@ -57,7 +58,7 @@ export default function ReportDetailsScreen({ route }) {
           </Text>
         </View>
       )}
-    </ScrollView>
+    </ScrollScreenContainer>
   );
 }
 
